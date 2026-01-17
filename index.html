@@ -160,6 +160,18 @@
       .btn-primary {
         background: #ffffff;
         color: #111111;
+        transform: scale(1);
+        will-change: transform;
+      }
+
+      .btn-primary:hover {
+        background: #e6e6e6;
+        transform: scale(1.2);
+      }
+
+      .btn {
+        transition: transform 0.08s ease-out, background-color 0.08s ease-out;
+        transition-delay: 0s;
       }
 
       .btn-secondary {
