@@ -377,6 +377,7 @@
         const [phase, setPhase] = React.useState("hero");
         const [fadeActive, setFadeActive] = React.useState(false);
         const [fadeDuration, setFadeDuration] = React.useState(600);
+        const [progressPercent, setProgressPercent] = React.useState(0);
         const timersRef = React.useRef([]);
 
         const clearTimers = () => {
@@ -406,6 +407,18 @@
           }, 600);
 
           timersRef.current.push(fadeTimer);
+        };
+
+        const handleTimeUpdate = (event) => {
+          const { currentTime, duration } = event.target;
+          if (!duration) {
+            return;
+          }
+          setProgressPercent(Math.min((currentTime / duration) * 100, 100));
+        };
+
+        const handleLoadedMetadata = () => {
+          setProgressPercent(0);
         };
 
         return (
@@ -454,7 +467,12 @@
 
             {phase === "video" && (
               <div className="video-screen">
-                <video src="Assets/Bean.mov" autoPlay />
+                <video
+                  src="Assets/Bean.mov"
+                  autoPlay
+                  onTimeUpdate={handleTimeUpdate}
+                  onLoadedMetadata={handleLoadedMetadata}
+                />
                 <div className="video-header">
                   <button className="control-button" aria-label="Back">
                     <svg className="control-icon" viewBox="0 0 24 24">
@@ -470,7 +488,10 @@
                 </div>
                 <div className="control-bar">
                   <div className="progress-track">
-                    <div className="progress-fill"></div>
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${progressPercent}%` }}
+                    ></div>
                   </div>
                   <div className="controls-row">
                     <div className="controls-left">
