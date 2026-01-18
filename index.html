@@ -240,6 +240,28 @@
         z-index: 10;
       }
 
+      .end-fade-overlay {
+        position: absolute;
+        inset: 0;
+        background: #000000;
+        z-index: 16;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .end-fade-overlay.active {
+        animation: fadeToBlack 2s ease-out forwards;
+      }
+
+      @keyframes fadeToBlack {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
       .video-screen video {
         width: 100%;
         height: 100%;
@@ -385,6 +407,7 @@
         const [fadeActive, setFadeActive] = React.useState(false);
         const [fadeDuration, setFadeDuration] = React.useState(600);
         const [progressPercent, setProgressPercent] = React.useState(0);
+        const [endFadeActive, setEndFadeActive] = React.useState(false);
         const timersRef = React.useRef([]);
 
         const clearTimers = () => {
@@ -404,10 +427,16 @@
           if (phase !== "hero") {
             setFadeActive(false);
           }
+          if (phase !== "video") {
+            setEndFadeActive(false);
+          }
         }, [phase]);
 
         React.useEffect(() => {
           console.log("phase:", phase, "fadeActive:", fadeActive);
+          if (fadeActive) {
+            console.log("fade-overlay transition STARTED");
+          }
         }, [phase, fadeActive]);
 
         const handlePlay = () => {
@@ -448,6 +477,12 @@
             return;
           }
           setProgressPercent(Math.min((currentTime / duration) * 100, 100));
+          
+          // Trigger fade to black animation in last 2 seconds
+          const timeRemaining = duration - currentTime;
+          if (timeRemaining <= 2 && !endFadeActive) {
+            setEndFadeActive(true);
+          }
         };
 
         const handleLoadedMetadata = () => {
@@ -514,6 +549,10 @@
                   }}
                   onPlay={() => console.log("video play")}
                   onPause={() => console.log("video pause")}
+                  onEnded={() => {
+                    console.log("video ended");
+                    setEndFadeActive(true);
+                  }}
                   onError={(event) => console.log("video error", event)}
                   onTimeUpdate={handleTimeUpdate}
                 />
@@ -597,6 +636,9 @@
                     </div>
                   </div>
                 </div>
+                <div
+                  className={`end-fade-overlay${endFadeActive ? " active" : ""}`}
+                ></div>
               </div>
             )}
 

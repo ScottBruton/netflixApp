@@ -42,6 +42,12 @@
         width: 100%;
         padding: 0 18px;
         text-align: center;
+        opacity: 0;
+        transition: opacity 1.2s ease;
+      }
+
+      .centered-div.visible {
+        opacity: 1;
       }
 
       .profile-gate-label {
@@ -281,12 +287,20 @@
       </div>
     </div>
     <script>
-      console.log("profiles.html loaded");
       const brutonsLink = document.getElementById("brutons-profile");
       const overlay = document.getElementById("transition-overlay");
+      const profilesContainer = document.querySelector(".centered-div");
+
+      if (profilesContainer) {
+        requestAnimationFrame(() => {
+          profilesContainer.classList.add("visible");
+        });
+      }
+
       if (brutonsLink && overlay) {
         brutonsLink.addEventListener("click", (event) => {
           event.preventDefault();
+          console.log("transition-overlay transition STARTED");
           overlay.classList.add("active");
           overlay.classList.remove("fade-out");
 
