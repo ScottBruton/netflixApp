@@ -155,6 +155,65 @@
         color: var(--text-primary);
         border-color: var(--text-primary);
       }
+
+      .transition-overlay {
+        position: absolute;
+        inset: 0;
+        background: #141414;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+        z-index: 10;
+      }
+
+      .transition-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .transition-overlay.fade-out {
+        opacity: 0;
+      }
+
+      .loading-card {
+        position: relative;
+        width: clamp(72px, 18vw, 120px);
+        height: clamp(72px, 18vw, 120px);
+      }
+
+      .loading-avatar {
+        width: 62%;
+        height: 62%;
+        border-radius: 8px;
+        object-fit: cover;
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: clamp(130px, 28vw, 190px);
+        height: clamp(130px, 28vw, 190px);
+        transform: translate(-50%, -50%);
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
     </style>
   </head>
   <body>
@@ -165,7 +224,7 @@
           <ul class="choose-profile">
             <li class="profile">
               <div>
-                <a class="profile-link" tabindex="0" href="index.html">
+                <a class="profile-link" id="brutons-profile" tabindex="0" href="index.html">
                   <div class="avatar-wrapper">
                     <div
                       class="profile-icon"
@@ -207,6 +266,28 @@
           <a class="profile-button" href="#">Manage profiles</a>
         </span>
       </div>
+      <div class="transition-overlay" id="transition-overlay" aria-hidden="true">
+        <div class="loading-card">
+          <img class="loading-avatar" src="Assets/profilePic.png" alt="The Brutons" />
+          <img class="loading-spinner" src="Assets/site-spinner.png" alt="Loading" />
+        </div>
+      </div>
     </div>
+    <script>
+      const brutonsLink = document.getElementById("brutons-profile");
+      const overlay = document.getElementById("transition-overlay");
+
+      if (brutonsLink && overlay) {
+        brutonsLink.addEventListener("click", (event) => {
+          event.preventDefault();
+          overlay.classList.add("active");
+          overlay.classList.remove("fade-out");
+
+          setTimeout(() => {
+            window.location.href = brutonsLink.href;
+          }, 1000);
+        });
+      }
+    </script>
   </body>
 </html>
