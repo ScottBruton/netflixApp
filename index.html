@@ -29,6 +29,7 @@
 
       .app {
         width: 360px;
+        aspect-ratio: 3013 / 4151;
         position: relative;
         overflow: hidden;
         opacity: 0;
@@ -399,8 +400,20 @@
           };
         }, []);
 
-        const handlePlay = () => {
+        React.useEffect(() => {
           if (phase !== "hero") {
+            setFadeActive(false);
+          }
+        }, [phase]);
+
+        React.useEffect(() => {
+          console.log("phase:", phase, "fadeActive:", fadeActive);
+        }, [phase, fadeActive]);
+
+        const handlePlay = () => {
+          console.log("Play clicked");
+          if (phase !== "hero") {
+            console.log("Play ignored, current phase:", phase);
             return;
           }
 
@@ -409,11 +422,19 @@
           setFadeActive(true);
 
           const fadeTimer = setTimeout(() => {
+            console.log("Fade to loading");
             setPhase("loading");
+            setFadeActive(false);
             const loadingTimer = setTimeout(() => {
-              setPhase("video");
+              console.log("Fade to video");
               setFadeDuration(1000);
-              setFadeActive(false);
+              setFadeActive(true);
+              const videoTimer = setTimeout(() => {
+                console.log("Show video");
+                setPhase("video");
+                setFadeActive(false);
+              }, 1000);
+              timersRef.current.push(videoTimer);
             }, 3000);
             timersRef.current.push(loadingTimer);
           }, 600);
@@ -481,8 +502,20 @@
                 <video
                   src="Assets/Bean.mov"
                   autoPlay
+                  muted
+                  playsInline
+                  onLoadedMetadata={(event) => {
+                    console.log("video loaded metadata", event.target.duration);
+                    handleLoadedMetadata();
+                  }}
+                  onCanPlay={(event) => {
+                    console.log("video can play");
+                    event.target.play();
+                  }}
+                  onPlay={() => console.log("video play")}
+                  onPause={() => console.log("video pause")}
+                  onError={(event) => console.log("video error", event)}
                   onTimeUpdate={handleTimeUpdate}
-                  onLoadedMetadata={handleLoadedMetadata}
                 />
                 <div className="video-header">
                   <button className="control-button" aria-label="Back">
