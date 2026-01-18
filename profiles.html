@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Who&#39;s watching?</title>
+    <style>
+      :root {
+        --text-primary: #ffffff;
+        --text-secondary: #808080;
+        --bg-dark: #141414;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 100vw;
+        aspect-ratio: 9 / 16;
+        position: relative;
+        overflow: hidden;
+        background: var(--bg-dark);
+      }
+
+      .centered-div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        padding: 0 18px;
+        text-align: center;
+      }
+
+      .profile-gate-label {
+        font-size: clamp(24px, 6vw, 48px);
+        font-weight: 400;
+        margin: 0 0 28px;
+      }
+
+      .choose-profile {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .profile-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        cursor: pointer;
+      }
+
+      .avatar-wrapper {
+        width: clamp(72px, 18vw, 120px);
+        margin: 0 auto;
+      }
+
+      .profile-icon {
+        width: 100%;
+        padding-top: 100%;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .profile-name {
+        display: block;
+        margin-top: 10px;
+        font-size: clamp(11px, 2.6vw, 16px);
+        color: var(--text-secondary);
+        max-width: 10em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .profile-link:hover .profile-icon,
+      .profile-link:focus .profile-icon {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+      }
+
+      .profile-link:hover .profile-name,
+      .profile-link:focus .profile-name {
+        color: var(--text-primary);
+      }
+
+      .add-profile-icon {
+        width: 100%;
+        padding-top: 100%;
+        border-radius: 8px;
+        background: #141414;
+        position: relative;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .add-profile-icon img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 42%;
+        height: 42%;
+        transform: translate(-50%, -50%);
+        filter: brightness(0) invert(1);
+      }
+
+      .profile-link:hover .add-profile-icon,
+      .profile-link:focus .add-profile-icon {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+      }
+
+      .profile-link:hover .add-profile-icon,
+      .profile-link:focus .add-profile-icon {
+        background: #ffffff;
+      }
+
+      .profile-link:hover .add-profile-icon img,
+      .profile-link:focus .add-profile-icon img {
+        filter: none;
+      }
+
+      .profile-button {
+        display: inline-block;
+        margin-top: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--text-secondary);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: clamp(10px, 2.2vw, 14px);
+        letter-spacing: 0.08em;
+        transition: color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .profile-button:hover {
+        color: var(--text-primary);
+        border-color: var(--text-primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="centered-div list-profiles-container" data-uia="profile-choices-page">
+        <div class="list-profiles">
+          <h1 class="profile-gate-label">Who&#39;s watching?</h1>
+          <ul class="choose-profile">
+            <li class="profile">
+              <div>
+                <a class="profile-link" tabindex="0" href="index.html">
+                  <div class="avatar-wrapper">
+                    <div
+                      class="profile-icon"
+                      style="background-image: url('Assets/profilePic.png')"
+                    ></div>
+                  </div>
+                  <span class="profile-name">The Brutons</span>
+                </a>
+              </div>
+            </li>
+            <li class="profile">
+              <div>
+                <a class="profile-link" tabindex="0" href="#">
+                  <div class="avatar-wrapper">
+                    <div
+                      class="profile-icon"
+                      style="background-image: url('Assets/kids.png')"
+                    ></div>
+                  </div>
+                  <span class="profile-name">Kids</span>
+                </a>
+              </div>
+            </li>
+            <li class="profile">
+              <div>
+                <a class="profile-link" tabindex="0" href="#">
+                  <div class="avatar-wrapper">
+                    <div class="add-profile-icon">
+                      <img src="Assets/plus.svg" alt="Add" />
+                    </div>
+                  </div>
+                  <span class="profile-name">Add profile</span>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <span data-uia="profile-button">
+          <a class="profile-button" href="#">Manage profiles</a>
+        </span>
+      </div>
+    </div>
+  </body>
+</html>
