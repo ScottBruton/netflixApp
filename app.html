@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netflix Intro</title>
+    <style>
+      :root {
+        --bg-dark: #141414;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background: var(--bg-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      .app {
+        width: 360px;
+        height: calc(360px * 4151 / 3013);
+        position: relative;
+        overflow: hidden;
+        background: var(--bg-dark);
+      }
+
+      .intro-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.6s ease;
+      }
+
+      .intro-video.fade-out {
+        opacity: 0;
+      }
+
+      .fade-overlay {
+        position: absolute;
+        inset: 0;
+        background: var(--bg-dark);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+      }
+
+      .fade-overlay.active {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <video
+        id="intro-video"
+        class="intro-video"
+        src="Assets/NetFlixIntro.mp4"
+        autoplay
+        muted
+        playsinline
+      ></video>
+      <div class="fade-overlay" id="fade-overlay"></div>
+    </div>
+    <script>
+      const introVideo = document.getElementById("intro-video");
+      const fadeOverlay = document.getElementById("fade-overlay");
+      let hasNavigated = false;
+
+      console.log("app.html loaded");
+
+      const goToProfiles = () => {
+        if (hasNavigated) {
+          return;
+        }
+        hasNavigated = true;
+        console.log("navigating to profiles.html");
+        introVideo.classList.add("fade-out");
+        fadeOverlay.classList.add("active");
+        setTimeout(() => {
+          window.location.href = "profiles.html";
+        }, 600);
+      };
+
+      if (introVideo) {
+        introVideo.addEventListener("loadeddata", () => {
+          console.log("intro video loaded");
+        });
+        introVideo.addEventListener("loadedmetadata", () => {
+          if (introVideo.duration && Number.isFinite(introVideo.duration)) {
+            const ms = introVideo.duration * 100 + 300;
+            console.log("intro duration ms", ms);
+            setTimeout(goToProfiles, ms);
+          }
+        });
+        introVideo.addEventListener("ended", goToProfiles);
+        introVideo.addEventListener("timeupdate", () => {
+          if (introVideo.duration && introVideo.currentTime >= introVideo.duration - 0.05) {
+            goToProfiles();
+          }
+        });
+      } else {
+        console.log("intro video element not found");
+      }
+    </script>
+  </body>
+</html>

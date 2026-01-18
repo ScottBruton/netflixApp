@@ -31,8 +31,13 @@
         width: 360px;
         position: relative;
         overflow: hidden;
+        opacity: 0;
+        transition: opacity 1s ease;
       }
 
+      .app.is-visible {
+        opacity: 1;
+      }
       .hero {
         width: 100%;
         aspect-ratio: 3013 / 4151;
@@ -374,6 +379,7 @@
       );
 
       const App = () => {
+        const [isVisible, setIsVisible] = React.useState(false);
         const [phase, setPhase] = React.useState("hero");
         const [fadeActive, setFadeActive] = React.useState(false);
         const [fadeDuration, setFadeDuration] = React.useState(600);
@@ -385,7 +391,13 @@
           timersRef.current = [];
         };
 
-        React.useEffect(() => () => clearTimers(), []);
+        React.useEffect(() => {
+          const handle = requestAnimationFrame(() => setIsVisible(true));
+          return () => {
+            cancelAnimationFrame(handle);
+            clearTimers();
+          };
+        }, []);
 
         const handlePlay = () => {
           if (phase !== "hero") {
@@ -422,7 +434,7 @@
         };
 
         return (
-          <div className="app">
+          <div className={`app${isVisible ? " is-visible" : ""}`}>
             {phase === "hero" && (
               <section className="hero">
                 <Header />
